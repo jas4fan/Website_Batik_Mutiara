@@ -16,7 +16,10 @@
 <body>
     <div class="card login-card shadow-lg">
         <div class="card-header">
-            <img src="https://via.placeholder.com/80?text=LOGO" alt="Logo" class="mb-2 rounded-circle">
+            <img src="{{ asset('image/logo.png') }}" 
+                alt="Logo" 
+                class="mb-2 rounded-circle"
+                style="width: 60px; height: 60px; object-fit: cover;">
             <h4 class="fw-bold text-dark">PT BATIK MUTIARA</h4>
             <p class="text-muted small">Sistem Informasi Penjualan</p>
         </div>
