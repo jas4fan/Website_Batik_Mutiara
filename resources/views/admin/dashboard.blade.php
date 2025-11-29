@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12 mb-4">
         <h2>Dashboard</h2>
-        <p class="text-muted">Ringkasan pendapatan toko hari ini.</p>
+        <p class="text-muted">Ringkasan pendapatan toko hari ini</p>
     </div>
     
     <div class="col-md-3">

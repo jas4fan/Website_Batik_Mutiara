@@ -33,8 +33,7 @@ public function indexKasir(Request $request) {
 
     // Jika ada input 'search' dari form
     if ($request->has('search')) {
-        $query->where('username', 'LIKE', '%' . $request->search . '%')
-              ->orWhere('nama_kasir', 'LIKE', '%' . $request->search . '%'); // Bonus: Cari nama juga
+        $query->where('username', 'LIKE', '%' . $request->search . '%');
     }
 
     $kasirs = $query->get();
@@ -86,19 +85,17 @@ public function destroyKasir($id) {
 // Method Menampilkan Daftar Penjualan
 public function laporanPenjualan(Request $request)
 {
-    // Mengambil semua penjualan beserta data kasirnya
-    $penjualans = Penjualan::with('kasir')->orderBy('created_at', 'desc')->get();
-    return view('admin.penjualan.index', compact('penjualans'));
-
     $query = Penjualan::with('kasir');
 
-    if ($request->has('search')) {
+    if ($request->filled('search')) {
         $query->where('no_invoice', 'LIKE', '%' . $request->search . '%');
     }
 
     $penjualans = $query->orderBy('created_at', 'desc')->get();
+
     return view('admin.penjualan.index', compact('penjualans'));
 }
+
 
 // Method Edit Penjualan (Menampilkan Form)
 public function editPenjualan($id)

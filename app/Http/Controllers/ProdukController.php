@@ -8,30 +8,29 @@ use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
-    public function index(Request $request)
+        public function index(Request $request)
     {
-        $produks = Produk::all();
-        return view('admin.produk.index', compact('produks'));
-
         $query = Produk::query();
 
-        if ($request->has('search') && $request->search != null) {
+        // Cek apakah ada input pencarian
+        if ($request->filled('search')) {
             $keyword = $request->search;
-        
-            // Logika hapus 'BTK' dan '0' di depan jika user mencari format kode lengkap
-            // Contoh: User ketik "BTK005" -> Sistem cari ID 5
-            $cleanId = preg_replace('/[^0-9]/', '', $keyword); 
-            $cleanId = (int)$cleanId; // Ubah '005' jadi 5
 
-            $query->where('id_produk', $cleanId)
-                ->orWhere('id_produk', 'LIKE', "%$keyword%") // Cari angka langsung
-                ->orWhere('nama_produk', 'LIKE', "%$keyword%"); // Bonus: Cari nama juga
+            // Ambil angka dari ID produk misal BTK001 → 1
+            $cleanId = preg_replace('/[^0-9]/', '', $keyword);
+            $cleanId = (int) $cleanId;
+
+            // Query search
+            $query->where('id_produk', $cleanId);
         }
 
+        // Ambil hasil query
         $produks = $query->get();
-        return view('admin.produk.index', compact('produks'));
 
+        // Return view terakhir
+        return view('admin.produk.index', compact('produks'));
     }
+
 
         public function store(Request $request)
     {
