@@ -18,7 +18,6 @@
                 <th>Kategori</th>
                 <th>Harga</th>
                 <th>Stok</th>
-                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -30,9 +29,9 @@
                 <td>Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
                 <td>{{ $produk->stok }}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#editProduk{{ $produk->id_produk }}">
+                    {{-- <button class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#editProduk{{ $produk->id_produk }}">
                         <i class="fas fa-edit"></i>
-                    </button>
+                    </button> --}}
                     {{-- <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus produk ini?')">
                         @csrf @method('DELETE')
                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -40,7 +39,7 @@
                 </td>
             </tr>
 
-            <div class="modal fade" id="editProduk{{ $produk->id_produk }}" tabindex="-1">
+            {{-- <div class="modal fade" id="editProduk{{ $produk->id_produk }}" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -59,7 +58,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             @endforeach
         </tbody>
     </table>

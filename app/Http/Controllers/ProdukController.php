@@ -8,31 +8,35 @@ use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Produk::query();
 
-        // Cek apakah ada input pencarian
+        // LOGIKA PENCARIAN (Sudah diperbaiki agar bisa cari Nama juga)
         if ($request->filled('search')) {
             $keyword = $request->search;
-
-            // Ambil angka dari ID produk misal BTK001 → 1
+            
+            // Coba ambil angka dari string (misal BTK005 -> 5)
             $cleanId = preg_replace('/[^0-9]/', '', $keyword);
             $cleanId = (int) $cleanId;
 
-            // Query search
-            $query->where('id_produk', $cleanId);
+            $query->where('id_produk', $cleanId)
+                  ->orWhere('id_produk', 'LIKE', '%' . $keyword . '%'); // Tambahan: Cari ID mentah
         }
 
-        // Ambil hasil query
         $produks = $query->get();
 
-        // Return view terakhir
+        // --- PERBAIKAN PENTING 1: BEDAKAN VIEW ---
+        // Jika yang login Kasir, arahkan ke folder kasir
+        if (Auth::guard('kasir')->check()) {
+            return view('kasir.produk.index', compact('produks'));
+        }
+        
+        // Jika Admin, arahkan ke folder admin
         return view('admin.produk.index', compact('produks'));
     }
 
-
-        public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'nama_produk' => 'required',
@@ -43,7 +47,7 @@ class ProdukController extends Controller
 
         $data = $request->all();
 
-        // Cek siapa yang login
+        // Cek siapa yang login untuk mencatat history
         if (Auth::guard('admin')->check()) {
             $data['id_admin'] = Auth::guard('admin')->user()->id_admin;
         } elseif (Auth::guard('kasir')->check()) {
@@ -55,28 +59,40 @@ class ProdukController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan');
     }
 
-    public function update(Request $request)
-{
-    $request->validate([
-        'nama_produk' => 'required',
-        'jenis_produk' => 'required',
-        'harga' => 'required|numeric',
-        'stok' => 'required|integer',
-    ]);
+    // --- PERBAIKAN PENTING 2: TAMBAHKAN $id PADA PARAMETER ---
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_produk' => 'required',
+            'jenis_produk' => 'required',
+            'harga' => 'required|numeric',
+            'stok' => 'required|integer',
+        ]);
 
-    $data = $request->all();
+        // Cari produk berdasarkan ID yang dikirim dari URL
+        $produk = Produk::findOrFail($id);
 
-    // Cek siapa yang login
-    if (Auth::guard('admin')->check()) {
-        $data['id_admin'] = Auth::guard('admin')->user()->id_admin;
-    } elseif (Auth::guard('kasir')->check()) {
-        $data['id_kasir'] = Auth::guard('kasir')->user()->id_kasir;
+        $data = [
+            'nama_produk' => $request->nama_produk,
+            'jenis_produk' => $request->jenis_produk,
+            'harga' => $request->harga,
+            'stok' => $request->stok,
+        ];
+
+        // Cek siapa yang login (untuk update history user)
+        if (Auth::guard('admin')->check()) {
+            $data['id_admin'] = Auth::guard('admin')->user()->id_admin;
+            // $data['id_kasir'] = null; // Opsional
+        } elseif (Auth::guard('kasir')->check()) {
+            $data['id_kasir'] = Auth::guard('kasir')->user()->id_kasir;
+            // $data['id_admin'] = null; // Opsional
+        }
+
+        // --- PERBAIKAN PENTING 3: GUNAKAN UPDATE, BUKAN CREATE ---
+        $produk->update($data);
+
+        return redirect()->back()->with('success', 'Produk berhasil diperbarui');
     }
-
-    Produk::create($data);
-
-    return redirect()->back()->with('success', 'Produk berhasil diperbarui');
-}
 
     public function destroy($id)
     {

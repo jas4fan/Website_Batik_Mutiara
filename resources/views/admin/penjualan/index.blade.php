@@ -35,10 +35,10 @@
                     <a href="{{ route('admin.penjualan.edit', $p->id_penjualan) }}" class="btn btn-sm btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    <form action="{{ route('admin.penjualan.destroy', $p->id_penjualan) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus transaksi ini? Stok akan dikembalikan.')">
+                    {{-- <form action="{{ route('admin.penjualan.destroy', $p->id_penjualan) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus transaksi ini? Stok akan dikembalikan.')">
                         @csrf @method('DELETE')
                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                    </form>
+                    </form> --}}
                 </td>
             </tr>
             @endforeach
