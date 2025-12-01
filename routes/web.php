@@ -34,33 +34,35 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
 
     // Manajemen Produk (CRUD)
     Route::resource('produk', ProdukController::class);
-    
-    // Laporan Penjualan (Placeholder jika belum dibuat controller khususnya)
-    Route::get('/penjualan', function() {
-        return "Halaman Laporan Penjualan (Akan Datang)";
-    })->name('admin.penjualan');
 
     // Di dalam group prefix admin
     Route::get('/penjualan', [AdminController::class, 'laporanPenjualan'])->name('admin.penjualan');
     Route::get('/penjualan/{id}/edit', [AdminController::class, 'editPenjualan'])->name('admin.penjualan.edit');
     Route::put('/penjualan/{id}', [AdminController::class, 'updatePenjualan'])->name('admin.penjualan.update');
-    Route::delete('/penjualan/{id}', [AdminController::class, 'destroyPenjualan'])->name('admin.penjualan.destroy');
+    // Route::delete('/penjualan/{id}', [AdminController::class, 'destroyPenjualan'])->name('admin.penjualan.destroy');
 });
 
 // 3. Group Route Khusus Kasir
 Route::middleware(['auth:kasir'])->prefix('kasir')->group(function () {
-    // Dashboard/Transaksi Kasir
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('kasir.transaksi');
-    Route::post('/transaksi/add', [TransaksiController::class, 'addToCart'])->name('kasir.transaksi.add');
-    Route::get('/transaksi/delete/{id}', [TransaksiController::class, 'removeFromCart'])->name('kasir.transaksi.delete');
-    Route::post('/transaksi/checkout', [TransaksiController::class, 'checkout'])->name('kasir.transaksi.checkout');
+    // Dashboard & Transaksi
+    Route::get('/transaksi', [App\Http\Controllers\TransaksiController::class, 'index'])->name('kasir.transaksi');
+    Route::post('/transaksi/add', [App\Http\Controllers\TransaksiController::class, 'addToCart'])->name('kasir.transaksi.add');
+    Route::get('/transaksi/delete/{id}', [App\Http\Controllers\TransaksiController::class, 'removeFromCart'])->name('kasir.transaksi.delete');
+    Route::post('/transaksi/checkout', [App\Http\Controllers\TransaksiController::class, 'checkout'])->name('kasir.transaksi.checkout');
     
-    // CRU Produk untuk Kasir
-    Route::resource('produk', ProdukController::class)->names('kasir.produk');
-    // Rekap Penjualan Saya
-    Route::get('/riwayat', [App\Http\Controllers\TransaksiController::class, 'riwayat'])->name('kasir.riwayat');
-    // Redirect dashboard kasir ke transaksi
     Route::get('/dashboard', function() {
         return redirect()->route('kasir.transaksi');
     })->name('kasir.dashboard');
+
+    Route::get('/riwayat', [App\Http\Controllers\TransaksiController::class, 'riwayat'])->name('kasir.riwayat');
+
+    // === PERBAIKAN: DEFINISI ROUTE PRODUK SECARA MANUAL ===
+    // 1. Tampilkan Halaman Produk Kasir
+    Route::get('/produk', [App\Http\Controllers\ProdukController::class, 'index'])->name('kasir.produk.index');
+    // 2. Simpan Produk Baru (POST)
+    Route::post('/produk', [App\Http\Controllers\ProdukController::class, 'store'])->name('kasir.produk.store');
+    // 3. Update Produk (PUT)
+    Route::put('/produk/{id}', [App\Http\Controllers\ProdukController::class, 'update'])->name('kasir.produk.update');
+    // 4. Hapus Produk (DELETE)
+    Route::delete('/produk/{id}', [App\Http\Controllers\ProdukController::class, 'destroy'])->name('kasir.produk.destroy');
 });

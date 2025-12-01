@@ -47,7 +47,7 @@
                     </table>
                     
                     <div class="alert alert-info small">
-                        <i class="fas fa-info-circle"></i> Saat ini Admin hanya diizinkan mengubah Tanggal Transaksi atau Menghapus Transaksi (Void) untuk menjaga integritas stok.
+                        <i class="fas fa-info-circle"></i> Saat ini Admin hanya diizinkan mengubah Tanggal Transaksi untuk menjaga integritas stok.
                     </div>
 
                     <button type="submit" class="btn btn-primary-custom">Simpan Perubahan</button>
