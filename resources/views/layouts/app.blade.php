@@ -46,19 +46,21 @@
             
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    @auth('admin')
+                    {{-- Cek Apakah Login sebagai ADMIN --}}
+                    @if(Auth::guard('admin')->check())
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.kasir.index') }}">Kasir</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('produk.index') }}">Produk</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.penjualan') }}">Laporan</a></li>
-                    @endauth
-
-                    @auth('kasir')
+                    
+                    {{-- Jika BUKAN Admin, Cek Apakah Login sebagai KASIR --}}
+                    @elseif(Auth::guard('kasir')->check())
                         <li class="nav-item"><a class="nav-link" href="{{ route('kasir.transaksi') }}">Transaksi</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('kasir.produk.index') }}">Kelola Produk</a></li> 
                         <li class="nav-item"><a class="nav-link" href="{{ route('kasir.riwayat') }}">Riwayat Penjualan</a></li>
-                    @endauth
+                    @endif
 
+                    {{-- Tombol Logout --}}
                     @if(Auth::guard('admin')->check() || Auth::guard('kasir')->check())
                         <li class="nav-item ms-3">
                             <a href="{{ route('logout') }}" class="btn btn-warning btn-sm fw-bold">Logout</a>
