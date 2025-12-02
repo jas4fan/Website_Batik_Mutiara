@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_admin', 100);
             $table->string('username', 15)->unique();
             $table->string('password'); // Akan di-hash
-            $table->enum('hak_akses', ['admin', 'owner'])->default('admin'); // Tambahan opsional
+            $table->enum('hak_akses', ['admin', 'owner'])->default('admin'); 
             $table->timestamps();
         });
     }

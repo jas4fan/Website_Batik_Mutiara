@@ -12,21 +12,19 @@ class ProdukController extends Controller
     {
         $query = Produk::query();
 
-        // LOGIKA PENCARIAN (Sudah diperbaiki agar bisa cari Nama juga)
+        // LOGIKA PENCARIAN 
         if ($request->filled('search')) {
             $keyword = $request->search;
             
-            // Coba ambil angka dari string (misal BTK005 -> 5)
             $cleanId = preg_replace('/[^0-9]/', '', $keyword);
             $cleanId = (int) $cleanId;
 
             $query->where('id_produk', $cleanId)
-                  ->orWhere('id_produk', 'LIKE', '%' . $keyword . '%'); // Tambahan: Cari ID mentah
+                  ->orWhere('id_produk', 'LIKE', '%' . $keyword . '%');
         }
 
         $produks = $query->get();
 
-        // --- PERBAIKAN PENTING 1: BEDAKAN VIEW ---
         // Jika yang login Kasir, arahkan ke folder kasir
         if (Auth::guard('kasir')->check()) {
             return view('kasir.produk.index', compact('produks'));
@@ -47,7 +45,7 @@ class ProdukController extends Controller
 
         $data = $request->all();
 
-        // Cek siapa yang login untuk mencatat history
+        // Cek siapa yang login 
         if (Auth::guard('admin')->check()) {
             $data['id_admin'] = Auth::guard('admin')->user()->id_admin;
         } elseif (Auth::guard('kasir')->check()) {
@@ -59,7 +57,6 @@ class ProdukController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan');
     }
 
-    // --- PERBAIKAN PENTING 2: TAMBAHKAN $id PADA PARAMETER ---
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -69,7 +66,7 @@ class ProdukController extends Controller
             'stok' => 'required|integer',
         ]);
 
-        // Cari produk berdasarkan ID yang dikirim dari URL
+        // Cari produk berdasarkan ID 
         $produk = Produk::findOrFail($id);
 
         $data = [
@@ -88,7 +85,6 @@ class ProdukController extends Controller
             // $data['id_admin'] = null; // Opsional
         }
 
-        // --- PERBAIKAN PENTING 3: GUNAKAN UPDATE, BUKAN CREATE ---
         $produk->update($data);
 
         return redirect()->back()->with('success', 'Produk berhasil diperbarui');

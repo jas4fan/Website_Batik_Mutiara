@@ -14,12 +14,12 @@ class AuthController extends Controller
     public function login(Request $request) {
         $credentials = $request->only('username', 'password');
 
-        // Coba Login sebagai Admin
+        // Login sebagai Admin
         if (Auth::guard('admin')->attempt($credentials)) {
             return redirect()->intended('/admin/dashboard');
         }
 
-        // Coba Login sebagai Kasir
+        // Login sebagai Kasir
         if (Auth::guard('kasir')->attempt($credentials)) {
             return redirect()->intended('/kasir/dashboard');
         }

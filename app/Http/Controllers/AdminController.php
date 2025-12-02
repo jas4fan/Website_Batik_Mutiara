@@ -108,29 +108,27 @@ public function editPenjualan($id)
 public function updatePenjualan(Request $request, $id)
 {
     $penjualan = Penjualan::findOrFail($id);
-    // Contoh mengubah total harga manual atau tanggal (sesuai kebutuhan admin)
+    // Mengubah tanggal (sesuai kebutuhan admin)
     $penjualan->update([
         'tanggal_penjualan' => $request->tanggal_penjualan,
-        // Admin ID yang mengubah bisa dicatat jika ada kolomnya
     ]);
     return redirect()->route('admin.penjualan')->with('success', 'Data penjualan diperbarui');
 }
 
-// Method Hapus Penjualan
-public function destroyPenjualan($id)
-{
-    // Hapus penjualan akan otomatis menghapus detail (cascade) 
-    // Tapi stok harus dikembalikan manual jika ingin fitur retur sempurna
-    $penjualan = Penjualan::with('details')->findOrFail($id);
-    foreach($penjualan->details as $detail) {
-        $produk = \App\Models\Produk::find($detail->id_produk);
-        if($produk) {
-            $produk->increment('stok', $detail->jumlah); // Kembalikan stok
-        }
-    }
-    $penjualan->delete();
+// // Method Hapus Penjualan
+// public function destroyPenjualan($id)
+// {
+//     // Hapus penjualan akan otomatis menghapus detail
+//     $penjualan = Penjualan::with('details')->findOrFail($id);
+//     foreach($penjualan->details as $detail) {
+//         $produk = \App\Models\Produk::find($detail->id_produk);
+//         if($produk) {
+//             $produk->increment('stok', $detail->jumlah); // Kembalikan stok
+//         }
+//     }
+//     $penjualan->delete();
     
-    return redirect()->back()->with('success', 'Transaksi dihapus dan stok dikembalikan.');
-}
+//     return redirect()->back()->with('success', 'Transaksi dihapus dan stok dikembalikan.');
+// }
 }
 

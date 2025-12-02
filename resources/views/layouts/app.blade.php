@@ -9,9 +9,9 @@
     
     <style>
         :root {
-            --primary-color: #8B4513; /* Warna Cokelat Batik */
+            --primary-color: #8B4513; 
             --secondary-color: #D2691E;
-            --light-bg: #FFF8DC; /* Krem lembut */
+            --light-bg: #FFF8DC; 
         }
         body {
             background-color: var(--light-bg);

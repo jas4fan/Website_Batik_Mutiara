@@ -107,7 +107,6 @@
 </div>
 
 <style>
-    /* Styling tambahan agar sesuai nuansa cokelat Batik Mutiara */
     .text-primary-custom { color: #8B4513; }
     .border-primary-custom { border-color: #8B4513; }
     .bg-primary { background-color: #8B4513 !important; }

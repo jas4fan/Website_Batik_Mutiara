@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
-    // Halaman Utama Kasir (POS)
+    // Halaman Utama Kasir 
     public function index()
     {
         $produks = Produk::where('stok', '>', 0)->get(); // Hanya tampilkan yg ada stok
@@ -112,7 +112,7 @@ class TransaksiController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-    // Hitung total pendapatan kasir ini
+    // Hitung total pendapatan kasir
     $totalPendapatan = $penjualans->sum('total_harga');
     $totalTransaksi = $penjualans->count();
 
